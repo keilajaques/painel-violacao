@@ -4,15 +4,18 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Painel de Violação de Marca — Branddi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg-0: #0a0d14;
-    --bg-1: #111621;
-    --bg-2: #161c2a;
-    --bg-3: #1d2536;
-    --bg-hover: #232c41;
-    --border: #263049;
-    --border-soft: #1e2639;
+    --bg-0: #07090f;
+    --bg-1: #0f1320;
+    --bg-2: #161b2c;
+    --bg-3: #1d2538;
+    --bg-hover: #232c44;
+    --border: #2a334d;
+    --border-soft: #1e2538;
     --text-0: #f0f3fa;
     --text-1: #c8cfde;
     --text-2: #8a93a7;
@@ -46,30 +49,64 @@
   }
 
   * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; background: var(--bg-0); color: var(--text-0); font-family: -apple-system, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif; font-size: 13px; line-height: 1.45; }
-  body { min-height: 100vh; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg-0);
+    color: var(--text-0);
+    font-family: 'Inter', -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.45;
+    font-feature-settings: 'cv02','cv03','cv04','cv11';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    min-height: 100vh;
+    /* Gradient radial sutil no topo da página + textura ambient */
+    background:
+      radial-gradient(ellipse 1200px 600px at 50% -200px, rgba(91,140,255,.08) 0%, transparent 60%),
+      radial-gradient(ellipse 800px 400px at 100% 0, rgba(159,107,255,.06) 0%, transparent 60%),
+      var(--bg-0);
+    background-attachment: fixed;
+  }
   button, input, select, textarea { font-family: inherit; color: inherit; }
+  .mono, code, kbd { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; }
 
-  ::-webkit-scrollbar { width: 10px; height: 10px; }
-  ::-webkit-scrollbar-track { background: var(--bg-0); }
-  ::-webkit-scrollbar-thumb { background: var(--bg-3); border-radius: 6px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--bg-hover); }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: var(--bg-3);
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--bg-hover); background-clip: padding-box; }
+  * { scrollbar-width: thin; scrollbar-color: var(--bg-3) transparent; }
 
-  /* Header */
+  /* Header — glassmorphism com gradiente sutil */
   .app-header {
-    background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 100%);
-    border-bottom: 1px solid var(--border);
-    padding: 16px 24px;
+    background: linear-gradient(180deg, rgba(15,19,32,.85) 0%, rgba(15,19,32,.75) 100%);
+    border-bottom: 1px solid var(--border-soft);
+    padding: 14px 28px;
     position: sticky;
     top: 0;
     z-index: 10;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+  }
+  .app-header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(91,140,255,.4) 30%, rgba(159,107,255,.4) 70%, transparent 100%);
+    opacity: .8;
   }
   .header-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 20px;
+    gap: 14px;
     flex-wrap: wrap;
   }
   .brand {
@@ -78,20 +115,75 @@
     gap: 12px;
   }
   .brand-mark {
-    width: 36px; height: 36px;
-    border-radius: 8px;
+    width: 34px; height: 34px;
+    border-radius: 9px;
     background: linear-gradient(135deg, #5b8cff 0%, #9f6bff 100%);
     display: flex; align-items: center; justify-content: center;
-    font-weight: 700; color: white; font-size: 16px;
-    box-shadow: 0 2px 10px rgba(91,140,255,.3);
+    font-weight: 800; color: white; font-size: 15px;
+    box-shadow:
+      0 4px 14px rgba(91,140,255,.4),
+      inset 0 1px 0 rgba(255,255,255,.2);
+    position: relative;
+  }
+  .brand-mark::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 9px;
+    background: linear-gradient(180deg, rgba(255,255,255,.15) 0%, transparent 50%);
+    pointer-events: none;
   }
   .brand h1 {
     margin: 0;
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 600;
     letter-spacing: -.2px;
+    color: var(--text-0);
+    background: linear-gradient(135deg, var(--text-0) 0%, var(--text-1) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
-  .brand .sub { color: var(--text-2); font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; margin-top: 2px;}
+
+  /* Botão circular de ícone (auditoria, settings) */
+  .icon-btn {
+    background: transparent;
+    border: 1px solid var(--border-soft);
+    color: var(--text-1);
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    font-size: 15px;
+    cursor: pointer;
+    position: relative;
+    transition: all .15s;
+  }
+  .icon-btn:hover {
+    background: var(--bg-2);
+    border-color: var(--border);
+    color: var(--text-0);
+  }
+
+  /* Token input — escondido por padrão, mostrado quando .visible */
+  .token-input.hidden-token {
+    position: absolute;
+    top: 60px;
+    right: 24px;
+    width: 320px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 11.5px;
+    font-family: ui-monospace, Consolas, monospace;
+    box-shadow: 0 8px 24px rgba(0,0,0,.4);
+    z-index: 20;
+    display: none;
+  }
+  .token-input.hidden-token.visible {
+    display: block;
+  }
 
   .header-controls {
     display: flex;
@@ -139,14 +231,38 @@
   }
   .btn-ghost:hover { background: var(--bg-3); box-shadow: none; }
   .btn-primary-strong {
-    background: linear-gradient(135deg, #5b8cff 0%, #7ea5ff 100%);
+    background: linear-gradient(135deg, #5b8cff 0%, #9f6bff 100%);
     padding: 9px 18px;
     font-size: 12.5px;
-    box-shadow: 0 4px 14px rgba(91,140,255,.35);
+    font-weight: 600;
+    letter-spacing: -.1px;
+    box-shadow:
+      0 4px 14px rgba(91,140,255,.35),
+      inset 0 1px 0 rgba(255,255,255,.15);
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary-strong::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,.12) 0%, transparent 100%);
+    pointer-events: none;
   }
   .btn-primary-strong:hover {
-    background: linear-gradient(135deg, #6b97ff 0%, #8db0ff 100%);
-    box-shadow: 0 6px 20px rgba(91,140,255,.5);
+    background: linear-gradient(135deg, #6b97ff 0%, #ad7eff 100%);
+    box-shadow:
+      0 8px 24px rgba(91,140,255,.5),
+      0 0 0 3px rgba(91,140,255,.2),
+      inset 0 1px 0 rgba(255,255,255,.2);
+    transform: translateY(-1px);
+  }
+  .btn-primary-strong:active {
+    transform: translateY(0);
+    box-shadow:
+      0 2px 8px rgba(91,140,255,.4),
+      inset 0 1px 0 rgba(255,255,255,.1);
   }
   .btn-icon {
     display: inline-block;
@@ -162,53 +278,57 @@
     to { transform: rotate(360deg); }
   }
 
-  /* User chip (identidade) */
+  /* User chip — versão compacta */
   .user-chip {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    background: var(--bg-2);
-    border: 1px solid var(--border);
+    gap: 8px;
+    background: transparent;
+    border: 1px solid var(--border-soft);
     border-radius: 8px;
-    padding: 5px 10px 5px 5px;
+    padding: 3px 12px 3px 3px;
     cursor: pointer;
     transition: all .15s;
     color: inherit;
+    height: 34px;
   }
-  .user-chip:hover { background: var(--bg-3); border-color: var(--accent); }
+  .user-chip:hover { background: var(--bg-2); border-color: var(--border); }
   .user-avatar {
     display: inline-flex;
     align-items: center; justify-content: center;
-    width: 28px; height: 28px;
+    width: 26px; height: 26px;
     background: linear-gradient(135deg, #5b8cff 0%, #9f6bff 100%);
     color: white;
     border-radius: 6px;
     font-weight: 700;
-    font-size: 12px;
+    font-size: 11px;
     text-transform: uppercase;
   }
   .user-avatar.anon { background: var(--bg-3); color: var(--text-2); }
-  .user-meta {
-    display: flex; flex-direction: column;
-    gap: 1px;
-    line-height: 1.1;
-    text-align: left;
+  .user-name-only {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-0);
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
-  .user-name { font-size: 11.5px; font-weight: 600; color: var(--text-0); }
-  .user-email { font-size: 9.5px; color: var(--text-3); letter-spacing: .2px; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-  /* Audit badge */
+  /* Audit badge — flutuante no canto do botão */
   .audit-badge {
+    position: absolute;
+    top: -4px; right: -4px;
     display: inline-flex;
     align-items: center; justify-content: center;
-    min-width: 18px; height: 18px;
-    padding: 0 5px;
+    min-width: 16px; height: 16px;
+    padding: 0 4px;
     background: var(--accent);
     color: white;
-    border-radius: 9px;
-    font-size: 10px;
+    border-radius: 8px;
+    font-size: 9.5px;
     font-weight: 700;
-    margin-left: 4px;
+    box-shadow: 0 0 0 2px var(--bg-1);
   }
 
   /* Audit table */
@@ -268,6 +388,8 @@
   }
   .audit-action-move { background: rgba(91,140,255,.15); color: var(--accent-2); }
   .audit-action-email { background: rgba(159,107,255,.15); color: #c4a7ff; }
+  .audit-action-cobranca { background: rgba(255,212,121,.15); color: var(--amber-text); }
+  .audit-action-encerramento { background: rgba(94,227,155,.15); color: var(--green-text); }
 
   /* Ícone de histórico por linha */
   .row-history-icon {
@@ -287,14 +409,12 @@
   .refresh-status {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     color: var(--text-2);
-    font-size: 11px;
-    padding: 6px 12px;
-    background: var(--bg-2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    font-size: 11.5px;
+    padding: 0 4px;
   }
+  #countdownText { color: var(--text-3); font-size: 10.5px; }
   .pulse-dot {
     width: 8px; height: 8px;
     border-radius: 50%;
@@ -316,103 +436,212 @@
 
   /* Main */
   .main {
-    padding: 20px 24px 60px;
-    max-width: 1800px;
+    padding: 28px 28px 70px;
+    max-width: 1820px;
     margin: 0 auto;
   }
 
-  /* Metrics cards */
+  /* Metrics cards — premium with depth & color hint */
   .metrics {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px;
-    margin-bottom: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
   }
   .metric-card {
-    background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 100%);
+    background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 100%);
     border: 1px solid var(--border-soft);
-    border-radius: var(--radius);
-    padding: 14px 16px;
+    border-radius: 14px;
+    padding: 20px 22px;
+    transition: all .25s cubic-bezier(.4,0,.2,1);
     position: relative;
     overflow: hidden;
-    transition: all .2s;
   }
-  .metric-card:hover { border-color: var(--border); transform: translateY(-1px); box-shadow: var(--shadow-2); }
+  .metric-card:hover {
+    border-color: var(--border);
+    transform: translateY(-2px);
+    box-shadow:
+      0 12px 24px rgba(0,0,0,.3),
+      0 0 0 1px var(--border);
+  }
   .metric-card::before {
     content: '';
     position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--accent);
-    opacity: .6;
+    inset: 0;
+    background: radial-gradient(ellipse 200px 100px at 0% 0%, rgba(91,140,255,.04) 0%, transparent 70%);
+    pointer-events: none;
   }
-  .metric-card.green::before { background: var(--green-text); }
-  .metric-card.orange::before { background: var(--orange-text); }
-  .metric-card.blue::before { background: var(--blue-text); }
-  .metric-card.amber::before { background: var(--amber-text); }
-  .metric-card.purple::before { background: var(--purple-text); }
-  .metric-card.teal::before { background: var(--teal-text); }
+  .metric-card.green { background: linear-gradient(180deg, rgba(94,227,155,.04) 0%, var(--bg-1) 100%); }
+  .metric-card.green::before { background: radial-gradient(ellipse 200px 100px at 0% 0%, rgba(94,227,155,.08) 0%, transparent 70%); }
+  .metric-card.orange { background: linear-gradient(180deg, rgba(255,168,92,.04) 0%, var(--bg-1) 100%); }
+  .metric-card.orange::before { background: radial-gradient(ellipse 200px 100px at 0% 0%, rgba(255,168,92,.08) 0%, transparent 70%); }
 
   .metric-label {
     color: var(--text-2);
     font-size: 10.5px;
     text-transform: uppercase;
-    letter-spacing: 1.1px;
+    letter-spacing: 1.2px;
     font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .metric-icon {
-    display: inline-flex;
-    width: 22px; height: 22px;
-    border-radius: 6px;
-    background: var(--bg-3);
-    align-items: center; justify-content: center;
-    font-size: 12px;
+    position: relative;
+    z-index: 1;
   }
   .metric-value {
-    font-size: 28px;
-    font-weight: 700;
-    margin-top: 8px;
-    letter-spacing: -.5px;
+    font-size: 36px;
+    font-weight: 800;
+    margin-top: 12px;
+    letter-spacing: -1px;
     color: var(--text-0);
     font-variant-numeric: tabular-nums;
+    line-height: 1;
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(135deg, var(--text-0) 0%, var(--text-1) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
   .metric-hint {
     color: var(--text-3);
     font-size: 11px;
-    margin-top: 4px;
+    margin-top: 8px;
+    position: relative;
+    z-index: 1;
+  }
+  .metric-card.green .metric-value {
+    background: linear-gradient(135deg, #5ee39b 0%, #3dc77a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .metric-card.orange .metric-value {
+    background: linear-gradient(135deg, #ffa85c 0%, #ff8a3a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
-  /* Filters */
+  /* Mini progress bar dentro de NF cards */
+  .metric-progress {
+    height: 4px;
+    background: rgba(255,255,255,.06);
+    border-radius: 2px;
+    margin-top: 10px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+  }
+  .metric-progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width .6s cubic-bezier(.4,0,.2,1);
+  }
+  .metric-card.green .metric-progress-fill { background: linear-gradient(90deg, #3dc77a 0%, #5ee39b 100%); box-shadow: 0 0 8px rgba(94,227,155,.5); }
+  .metric-card.orange .metric-progress-fill { background: linear-gradient(90deg, #ff8a3a 0%, #ffa85c 100%); box-shadow: 0 0 8px rgba(255,168,92,.5); }
+
+  /* Barra horizontal proporcional para Distribuição por Fase */
+  .phases-bar {
+    display: flex;
+    height: 6px;
+    margin-top: 12px;
+    border-radius: 3px;
+    overflow: hidden;
+    background: rgba(255,255,255,.04);
+    position: relative;
+    z-index: 1;
+  }
+  .phases-segment {
+    height: 100%;
+    transition: width .6s cubic-bezier(.4,0,.2,1);
+  }
+  .phase-backlog-bg { background: linear-gradient(90deg, var(--blue-text), #6b95ff); }
+  .phase-standby-bg { background: linear-gradient(90deg, var(--amber-text), #ffe095); }
+  .phase-doing-bg   { background: linear-gradient(90deg, var(--purple-text), #d4b9ff); }
+  .phase-enviado-bg { background: linear-gradient(90deg, var(--teal-text), #80f0e8); }
+
+  /* Card de Distribuição por Fase */
+  .phases-card .phase-list {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 16px;
+    position: relative;
+    z-index: 1;
+  }
+  .phase-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-1);
+    transition: color .15s;
+  }
+  .phase-item:hover { color: var(--text-0); }
+  .phase-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 8px currentColor;
+  }
+  .phase-backlog-dot { background: var(--blue-text); color: var(--blue-text); }
+  .phase-standby-dot { background: var(--amber-text); color: var(--amber-text); }
+  .phase-doing-dot   { background: var(--purple-text); color: var(--purple-text); }
+  .phase-enviado-dot { background: var(--teal-text); color: var(--teal-text); }
+  .phase-name { flex: 1; color: var(--text-2); }
+  .phase-count {
+    font-weight: 700;
+    color: var(--text-0);
+    font-variant-numeric: tabular-nums;
+    font-size: 13.5px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  /* Filters — refined chips */
   .filters-bar {
     display: flex;
-    gap: 10px;
+    gap: 16px;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
     flex-wrap: wrap;
-    padding: 12px 14px;
-    background: var(--bg-1);
+    padding: 14px 18px;
+    background: linear-gradient(180deg, var(--bg-1) 0%, rgba(15,19,32,0.6) 100%);
     border: 1px solid var(--border-soft);
-    border-radius: var(--radius);
+    border-radius: 12px;
   }
-  .filter-group { display: flex; gap: 6px; align-items: center; }
-  .filter-label { color: var(--text-2); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+  .filter-group { display: flex; gap: 5px; align-items: center; }
+  .filter-label {
+    color: var(--text-3);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-right: 6px;
+  }
   .filter-chip {
-    background: var(--bg-2);
-    border: 1px solid var(--border);
-    color: var(--text-1);
-    padding: 5px 10px;
-    border-radius: 6px;
+    background: rgba(255,255,255,.02);
+    border: 1px solid var(--border-soft);
+    color: var(--text-2);
+    padding: 6px 12px;
+    border-radius: 7px;
     font-size: 11.5px;
     cursor: pointer;
-    transition: all .15s;
+    transition: all .15s cubic-bezier(.4,0,.2,1);
     user-select: none;
     font-weight: 500;
   }
-  .filter-chip:hover { background: var(--bg-3); }
-  .filter-chip.active { background: var(--accent); border-color: var(--accent); color: white; }
+  .filter-chip:hover {
+    background: var(--bg-2);
+    color: var(--text-0);
+    border-color: var(--border);
+    transform: translateY(-1px);
+  }
+  .filter-chip.active {
+    background: linear-gradient(135deg, rgba(91,140,255,.15) 0%, rgba(159,107,255,.12) 100%);
+    border-color: rgba(91,140,255,.5);
+    color: var(--accent-2);
+    box-shadow:
+      0 2px 8px rgba(91,140,255,.15),
+      inset 0 1px 0 rgba(255,255,255,.05);
+  }
   .search-input {
     background: var(--bg-2);
     border: 1px solid var(--border);
@@ -467,13 +696,16 @@
     transition: width .25s ease;
   }
 
-  /* Table */
+  /* Table — premium dark with subtle depth */
   .table-wrap {
-    background: var(--bg-1);
+    background: linear-gradient(180deg, var(--bg-1) 0%, rgba(15,19,32,0.95) 100%);
     border: 1px solid var(--border-soft);
-    border-radius: var(--radius);
+    border-radius: 14px;
     overflow: hidden;
-    box-shadow: var(--shadow-2);
+    box-shadow:
+      0 4px 12px rgba(0,0,0,.2),
+      0 1px 3px rgba(0,0,0,.1),
+      inset 0 1px 0 rgba(255,255,255,.02);
   }
   .table-scroll {
     overflow-x: auto;
@@ -489,30 +721,77 @@
   .data-table thead th {
     position: sticky;
     top: 0;
-    background: var(--bg-2);
+    background: linear-gradient(180deg, var(--bg-2) 0%, rgba(22,28,42,0.92) 100%);
+    backdrop-filter: blur(10px);
     color: var(--text-2);
-    font-weight: 700;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.2px;
     font-size: 10px;
-    padding: 12px 14px;
+    padding: 14px 14px;
     text-align: left;
     border-bottom: 1px solid var(--border);
     white-space: nowrap;
     z-index: 2;
+    user-select: none;
+    transition: color .15s;
+  }
+  .data-table thead th:hover { color: var(--text-1); }
+  .data-table thead th::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(91,140,255,.4) 50%, transparent 100%);
+    opacity: .6;
+  }
+  .data-table thead th:not(:first-child)::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 30%; bottom: 30%;
+    width: 1px;
+    background: var(--border-soft);
+  }
+
+  .th-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+    color: var(--accent-2);
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 4px;
+    background: rgba(91,140,255,.1);
+    vertical-align: middle;
+    line-height: 1;
+    letter-spacing: 0;
+    text-transform: none;
+    transition: all .15s;
+  }
+  .data-table thead th:hover .th-icon {
+    background: rgba(91,140,255,.2);
+    color: var(--accent-2);
+  }
+  .th-label {
+    vertical-align: middle;
   }
   .data-table tbody tr {
-    border-bottom: 1px solid var(--border-soft);
-    transition: background .12s;
+    border-bottom: 1px solid rgba(30,37,56,.5);
+    transition: background .15s;
     animation: fadeIn .35s ease both;
+  }
+  .data-table tbody tr:nth-child(even):not(.group-middle):not(.group-last) {
+    background: rgba(255,255,255,.008);
   }
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(4px); }
     to { opacity: 1; transform: translateY(0); }
   }
   .data-table tbody tr:hover {
-    background: var(--bg-hover);
-    box-shadow: inset 0 0 0 1px rgba(91,140,255,.1);
+    background: var(--bg-2);
   }
   .data-table td {
     padding: 12px 14px;
@@ -582,10 +861,26 @@
     text-transform: uppercase;
   }
   .badge-dot { width: 6px; height: 6px; border-radius: 50%; }
-  .badge.with-nf { background: var(--green-bg); color: var(--green-text); border: 1px solid rgba(94,227,155,.2); }
-  .badge.with-nf .badge-dot { background: var(--green-text); }
-  .badge.no-nf { background: var(--orange-bg); color: var(--orange-text); border: 1px solid rgba(255,168,92,.2); }
-  .badge.no-nf .badge-dot { background: var(--orange-text); }
+  .badge.with-nf {
+    background: linear-gradient(135deg, rgba(94,227,155,.15) 0%, rgba(61,199,122,.1) 100%);
+    color: var(--green-text);
+    border: 1px solid rgba(94,227,155,.3);
+    box-shadow: inset 0 1px 0 rgba(94,227,155,.1);
+  }
+  .badge.with-nf .badge-dot {
+    background: var(--green-text);
+    box-shadow: 0 0 6px rgba(94,227,155,.6);
+  }
+  .badge.no-nf {
+    background: linear-gradient(135deg, rgba(255,168,92,.15) 0%, rgba(255,138,58,.1) 100%);
+    color: var(--orange-text);
+    border: 1px solid rgba(255,168,92,.3);
+    box-shadow: inset 0 1px 0 rgba(255,168,92,.1);
+  }
+  .badge.no-nf .badge-dot {
+    background: var(--orange-text);
+    box-shadow: 0 0 6px rgba(255,168,92,.6);
+  }
 
   .phase-badge {
     display: inline-block;
@@ -602,34 +897,31 @@
   .phase-enviado { background: var(--teal-bg); color: var(--teal-text); }
   .phase-concluido { background: var(--green-bg); color: var(--green-text); }
 
-  /* Move button — estilo proeminente na coluna de ações */
+  /* Move button — único botão com destaque visual */
   .btn-move {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    background: var(--bg-3);
-    border: 1px solid var(--border);
-    color: var(--text-0);
-    padding: 6px 11px;
+    gap: 4px;
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    color: white;
+    padding: 5px 12px;
+    height: 28px;
     border-radius: 6px;
-    font-size: 11px;
+    font-size: 11.5px;
     font-weight: 600;
-    letter-spacing: .3px;
+    letter-spacing: .2px;
     cursor: pointer;
-    transition: all .15s;
+    transition: all .12s;
     white-space: nowrap;
   }
   .btn-move:hover {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: white;
-    transform: translateY(-1px);
-    box-shadow: 0 3px 10px rgba(91,140,255,.35);
+    background: var(--accent-2);
+    border-color: var(--accent-2);
   }
   .btn-move.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: white;
+    background: var(--accent-2);
+    border-color: var(--accent-2);
   }
   .btn-move .caret {
     font-size: 10px;
@@ -637,6 +929,104 @@
   }
   .btn-move.loading { pointer-events: none; opacity: .7; }
   .btn-move.loading .caret { animation: spin 1s linear infinite; }
+
+  /* Kebab button — botão de "mais ações" */
+  .kebab-btn {
+    background: transparent;
+    border: 1px solid var(--border-soft);
+    color: var(--text-2);
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .12s;
+    padding: 0;
+  }
+  .kebab-btn:hover {
+    background: var(--bg-2);
+    border-color: var(--border);
+    color: var(--text-0);
+  }
+  .kebab-btn.active {
+    background: var(--bg-3);
+    border-color: var(--accent);
+    color: var(--accent-2);
+  }
+  .kebab-dots {
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: -1px;
+    transform: translateY(-3px);
+    font-weight: 700;
+  }
+
+  /* Actions popover (kebab menu) — reutiliza estilo do move popover */
+  .actions-popover {
+    position: fixed;
+    top: 0; left: 0;
+    min-width: 220px;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 14px 40px rgba(0,0,0,.6);
+    z-index: 120;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 4px;
+  }
+  .actions-popover.visible { display: flex; animation: popoverIn .15s ease both; }
+  .actions-popover-item {
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+    cursor: pointer;
+    color: var(--text-1);
+    font-size: 12.5px;
+    transition: all .1s;
+    text-decoration: none;
+    width: 100%;
+  }
+  .actions-popover-item:hover {
+    background: var(--bg-2);
+    color: var(--text-0);
+  }
+  .actions-popover-item:disabled,
+  .actions-popover-item.disabled {
+    opacity: .4;
+    cursor: not-allowed;
+    color: var(--text-3);
+  }
+  .actions-popover-item:disabled:hover,
+  .actions-popover-item.disabled:hover {
+    background: transparent;
+    color: var(--text-3);
+  }
+  .actions-popover-icon {
+    width: 22px;
+    text-align: center;
+    font-size: 13px;
+  }
+  .actions-popover-divider {
+    height: 1px;
+    background: var(--border-soft);
+    margin: 4px 0;
+  }
+  .actions-popover-meta {
+    margin-left: auto;
+    font-size: 10.5px;
+    color: var(--text-3);
+    background: var(--bg-3);
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
 
   /* Move popover */
   .move-popover {
@@ -719,6 +1109,74 @@
     animation: spin .7s linear infinite;
   }
 
+  /* Info & warn boxes para os novos modais */
+  .info-box {
+    background: var(--bg-2);
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: var(--text-1);
+  }
+  .warn-box {
+    background: rgba(255,212,121,.08);
+    border: 1px solid rgba(255,212,121,.25);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--amber-text);
+    line-height: 1.6;
+  }
+  .radio-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--bg-2);
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: all .12s;
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--text-1);
+  }
+  .radio-row:hover { border-color: var(--accent); background: var(--bg-3); }
+  .radio-row input[type="radio"] {
+    margin-top: 3px;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+  }
+  .radio-row input[type="radio"]:checked + span { color: var(--text-0); }
+  .radio-row:has(input:checked) { border-color: var(--accent); background: rgba(91,140,255,.08); }
+
+  .reason-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .3px;
+    text-transform: uppercase;
+    margin-right: 4px;
+  }
+  .reason-retirar { background: var(--green-bg); color: var(--green-text); }
+  .reason-manter { background: var(--blue-bg); color: var(--blue-text); }
+  .reason-semretorno { background: var(--bg-3); color: var(--text-2); }
+
+  /* Botão de cobrança — sutil, mesma família dos demais */
+  .action-btn.cobranca {
+    color: var(--amber-text);
+    border-color: rgba(255,212,121,.25);
+  }
+  .action-btn.cobranca:hover {
+    background: rgba(255,212,121,.12);
+    color: var(--amber-text);
+    border-color: rgba(255,212,121,.5);
+  }
+
   /* Linha destacada durante a movimentação */
   tr.row-moving td { opacity: .55; background: rgba(91,140,255,.06) !important; transition: opacity .2s; }
   tr.row-moved-out td { animation: rowFadeOut .4s ease both; }
@@ -746,11 +1204,41 @@
   .type-violation-badge:hover, .platform-badge:hover { max-width: none; }
 
   /* Cliente - ênfase tipográfica */
+  .client-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
   .client-name {
     font-weight: 600;
     color: var(--text-0);
     font-size: 12.5px;
     letter-spacing: -.1px;
+  }
+
+  /* Chip de tipo de caso (Violação de Marca | Comercial) */
+  .case-type-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 7px;
+    height: 18px;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: .6px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    cursor: help;
+  }
+  .case-type-marca {
+    background: rgba(91,140,255,.15);
+    color: var(--accent-2);
+    border: 1px solid rgba(91,140,255,.35);
+  }
+  .case-type-comercial {
+    background: rgba(255,168,92,.15);
+    color: var(--orange-text);
+    border: 1px solid rgba(255,168,92,.35);
   }
   .client-source {
     font-size: 9.5px;
@@ -774,16 +1262,16 @@
   /* Empty cells — mais elegante */
   .cell-empty { color: var(--text-3); opacity: .5; font-style: normal; }
 
-  /* Action buttons */
+  /* Action buttons — mais discretos, uniformes */
   .actions {
     display: flex;
     gap: 4px;
     align-items: center;
   }
   .action-btn {
-    background: var(--bg-2);
-    border: 1px solid var(--border);
-    color: var(--text-1);
+    background: transparent;
+    border: 1px solid var(--border-soft);
+    color: var(--text-2);
     width: 28px; height: 28px;
     border-radius: 6px;
     cursor: pointer;
@@ -791,13 +1279,17 @@
     align-items: center;
     justify-content: center;
     font-size: 13px;
-    transition: all .15s;
+    transition: all .12s;
     position: relative;
+    text-decoration: none;
   }
-  .action-btn:hover { background: var(--accent); color: white; border-color: var(--accent); transform: translateY(-1px); }
+  .action-btn:hover {
+    background: var(--bg-2);
+    border-color: var(--border);
+    color: var(--text-0);
+  }
   .action-btn[data-count] {
-    background: var(--bg-3);
-    border-color: var(--accent);
+    border-color: var(--border);
     color: var(--accent-2);
   }
   .action-btn[data-count]::after {
@@ -812,7 +1304,6 @@
     display: flex; align-items: center; justify-content: center;
     padding: 0 3px;
     font-weight: 700;
-    box-shadow: 0 2px 4px rgba(91,140,255,.4);
   }
 
   .tooltip { position: relative; }
@@ -864,27 +1355,41 @@
   /* Modal */
   .modal-backdrop {
     position: fixed; inset: 0;
-    background: rgba(5, 8, 15, 0.7);
-    backdrop-filter: blur(4px);
+    background: rgba(5, 8, 15, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     z-index: 100;
     display: none;
     align-items: center;
     justify-content: center;
     padding: 20px;
-    animation: fadeIn .18s ease both;
+    animation: fadeIn .2s ease both;
   }
   .modal-backdrop.visible { display: flex; }
   .modal {
-    background: var(--bg-1);
+    background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 100%);
     border: 1px solid var(--border);
-    border-radius: 14px;
+    border-radius: 16px;
     width: 100%;
     max-width: 780px;
     max-height: 90vh;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 30px 80px rgba(0,0,0,.6);
-    animation: modalIn .25s cubic-bezier(.2,.8,.2,1) both;
+    box-shadow:
+      0 40px 100px rgba(0,0,0,.7),
+      0 8px 32px rgba(0,0,0,.4),
+      inset 0 1px 0 rgba(255,255,255,.04);
+    animation: modalIn .3s cubic-bezier(.2,.8,.2,1) both;
+    overflow: hidden;
+    position: relative;
+  }
+  .modal::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(91,140,255,.4), rgba(159,107,255,.3), transparent);
+    opacity: .8;
   }
   @keyframes modalIn {
     from { transform: translateY(18px) scale(.98); opacity: 0; }
@@ -991,22 +1496,63 @@
   .footer-status {
     position: fixed;
     bottom: 0; left: 0; right: 0;
-    background: var(--bg-1);
-    border-top: 1px solid var(--border);
-    padding: 6px 20px;
+    background: linear-gradient(180deg, rgba(15,19,32,.85) 0%, rgba(7,9,15,.95) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border-soft);
+    padding: 7px 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 11px;
-    color: var(--text-2);
+    font-size: 10.5px;
+    color: var(--text-3);
     gap: 16px;
     z-index: 5;
+    letter-spacing: .2px;
   }
-  .footer-status .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-3); display: inline-block; margin: 0 6px; }
+  .footer-status strong { color: var(--text-1); font-weight: 600; }
+  .footer-status .dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--text-3);
+    display: inline-block;
+    margin: 0 8px;
+    opacity: .5;
+  }
 
   .cell-muted { color: var(--text-3); }
   .cell-warn { color: var(--orange-text); }
   .cell-link { max-width: 160px; overflow: hidden; text-overflow: ellipsis; display: inline-block; vertical-align: middle; }
+
+  /* Links unificados na tabela (ícones compactos) */
+  .links-group { display: inline-flex; gap: 4px; }
+  .link-icon {
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    background: var(--bg-2);
+    border: 1px solid var(--border-soft);
+    color: var(--text-1);
+    font-size: 13px;
+    text-decoration: none;
+    transition: all .12s;
+  }
+  .link-icon:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+  .link-icon.disabled {
+    opacity: .25;
+    cursor: not-allowed;
+    pointer-events: auto; /* mantém o tooltip */
+  }
+  .link-icon.disabled:hover {
+    background: var(--bg-2);
+    border-color: var(--border-soft);
+    color: var(--text-1);
+  }
 
   @media (max-width: 900px) {
     .token-input { width: 200px; }
@@ -1020,34 +1566,28 @@
   <div class="header-row">
     <div class="brand">
       <div class="brand-mark">B</div>
-      <div>
-        <h1>Painel de Violação de Marca</h1>
-        <div class="sub">Branddi · Gestão de Casos · Pipefy</div>
-      </div>
+      <h1>Painel de Violação de Marca</h1>
     </div>
     <div class="header-controls">
-      <input type="password" id="tokenInput" class="token-input" placeholder="Bearer token do Pipefy" autocomplete="off" />
-      <button id="loadBtn" class="btn btn-primary-strong">
-        <span class="btn-icon">⟳</span>
-        <span>Atualizar agora</span>
-      </button>
       <div class="refresh-status">
         <span id="pulseDot" class="pulse-dot"></span>
         <span id="refreshText">Aguardando…</span>
-        <span id="countdownText" style="color:var(--text-3)"></span>
+        <span id="countdownText"></span>
       </div>
-      <button id="userChip" class="user-chip tooltip" data-tooltip="Clique para ajustar seu nome de exibição">
-        <span class="user-avatar" id="userAvatar">?</span>
-        <span class="user-meta">
-          <span class="user-name" id="userName">—</span>
-          <span class="user-email" id="userEmail">não identificado</span>
-        </span>
+      <button id="loadBtn" class="btn btn-primary-strong tooltip" data-tooltip="Atualizar dados agora">
+        <span class="btn-icon">⟳</span>
+        <span>Atualizar</span>
       </button>
-      <button id="auditBtn" class="btn-ghost tooltip" data-tooltip="Abrir logs de auditoria">
+      <button id="auditBtn" class="icon-btn tooltip" data-tooltip="Logs de auditoria">
         <span>📋</span>
-        <span>Auditoria</span>
         <span class="audit-badge" id="auditBadge" style="display:none">0</span>
       </button>
+      <button id="userChip" class="user-chip tooltip" data-tooltip="Ajustar nome de exibição">
+        <span class="user-avatar" id="userAvatar">?</span>
+        <span class="user-name-only" id="userName">—</span>
+      </button>
+      <button id="settingsBtn" class="icon-btn tooltip" data-tooltip="Configurações (token)">⚙</button>
+      <input type="password" id="tokenInput" class="token-input hidden-token" placeholder="Bearer token do Pipefy" autocomplete="off" />
     </div>
   </div>
 </header>
@@ -1056,39 +1596,36 @@
 
   <section class="metrics" id="metrics">
     <div class="metric-card">
-      <div class="metric-label"><span class="metric-icon">📊</span>Total de Casos</div>
+      <div class="metric-label">Total de Casos</div>
       <div class="metric-value" id="m-total">—</div>
       <div class="metric-hint" id="m-total-hint">Aguardando dados</div>
     </div>
     <div class="metric-card green">
-      <div class="metric-label"><span class="metric-icon">🟢</span>Com Nota Fiscal</div>
+      <div class="metric-label">Com Nota Fiscal</div>
       <div class="metric-value" id="m-nf">—</div>
+      <div class="metric-progress"><div class="metric-progress-fill" id="m-nf-bar" style="width:0%"></div></div>
       <div class="metric-hint" id="m-nf-hint">0% do total</div>
     </div>
     <div class="metric-card orange">
-      <div class="metric-label"><span class="metric-icon">🟠</span>Sem Nota Fiscal</div>
+      <div class="metric-label">Sem Nota Fiscal</div>
       <div class="metric-value" id="m-no-nf">—</div>
+      <div class="metric-progress"><div class="metric-progress-fill" id="m-no-nf-bar" style="width:0%"></div></div>
       <div class="metric-hint" id="m-no-nf-hint">0% do total</div>
     </div>
-    <div class="metric-card blue">
-      <div class="metric-label"><span class="metric-icon">📥</span>Backlog / Pedidos</div>
-      <div class="metric-value" id="m-backlog">—</div>
-      <div class="metric-hint">Aguardando triagem</div>
-    </div>
-    <div class="metric-card amber">
-      <div class="metric-label"><span class="metric-icon">⏸</span>StandBy</div>
-      <div class="metric-value" id="m-standby">—</div>
-      <div class="metric-hint">Pausados</div>
-    </div>
-    <div class="metric-card purple">
-      <div class="metric-label"><span class="metric-icon">⚙</span>Doing</div>
-      <div class="metric-value" id="m-doing">—</div>
-      <div class="metric-hint">Em andamento</div>
-    </div>
-    <div class="metric-card teal">
-      <div class="metric-label"><span class="metric-icon">📤</span>Enviado ao Cliente</div>
-      <div class="metric-value" id="m-enviado">—</div>
-      <div class="metric-hint">Aguardando retorno</div>
+    <div class="metric-card phases-card">
+      <div class="metric-label">Distribuição por Fase</div>
+      <div class="phases-bar">
+        <div class="phases-segment phase-backlog-bg" id="m-bar-backlog" style="width:0%"></div>
+        <div class="phases-segment phase-standby-bg" id="m-bar-standby" style="width:0%"></div>
+        <div class="phases-segment phase-doing-bg"   id="m-bar-doing"   style="width:0%"></div>
+        <div class="phases-segment phase-enviado-bg" id="m-bar-enviado" style="width:0%"></div>
+      </div>
+      <div class="phase-list">
+        <div class="phase-item"><span class="phase-dot phase-backlog-dot"></span><span class="phase-name">Backlog</span><span class="phase-count" id="m-backlog">—</span></div>
+        <div class="phase-item"><span class="phase-dot phase-standby-dot"></span><span class="phase-name">StandBy</span><span class="phase-count" id="m-standby">—</span></div>
+        <div class="phase-item"><span class="phase-dot phase-doing-dot"></span><span class="phase-name">Doing</span><span class="phase-count" id="m-doing">—</span></div>
+        <div class="phase-item"><span class="phase-dot phase-enviado-dot"></span><span class="phase-name">Enviado</span><span class="phase-count" id="m-enviado">—</span></div>
+      </div>
     </div>
   </section>
 
@@ -1127,21 +1664,19 @@
       <table class="data-table">
         <thead>
           <tr>
-            <th style="min-width:180px">Cliente</th>
-            <th style="min-width:220px">Seller / Agressor</th>
-            <th style="min-width:130px">ID do Produto</th>
-            <th style="min-width:260px">Título do Produto</th>
-            <th style="min-width:140px">Link do Produto</th>
-            <th style="min-width:140px">Link da Evidência</th>
-            <th style="min-width:140px">Fase</th>
-            <th style="min-width:110px">Status NF</th>
-            <th style="min-width:80px">Anexos</th>
-            <th style="min-width:100px">Criado em</th>
-            <th style="min-width:140px">Ações</th>
+            <th style="min-width:180px"><span class="th-icon">◉</span><span class="th-label">Cliente</span></th>
+            <th style="min-width:220px"><span class="th-icon">⊕</span><span class="th-label">Seller / Agressor</span></th>
+            <th style="min-width:130px"><span class="th-icon">#</span><span class="th-label">ID</span></th>
+            <th style="min-width:260px"><span class="th-icon">▤</span><span class="th-label">Produto</span></th>
+            <th style="min-width:90px"><span class="th-icon">↗</span><span class="th-label">Links</span></th>
+            <th style="min-width:130px"><span class="th-icon">◐</span><span class="th-label">Fase</span></th>
+            <th style="min-width:90px"><span class="th-icon">✓</span><span class="th-label">NF</span></th>
+            <th style="min-width:100px"><span class="th-icon">◰</span><span class="th-label">Anexos</span></th>
+            <th style="min-width:170px"><span class="th-icon">▸</span><span class="th-label">Ações</span></th>
           </tr>
         </thead>
         <tbody id="tableBody">
-          <tr><td colspan="11" class="empty-state">
+          <tr><td colspan="9" class="empty-state">
             <div class="icon">🔐</div>
             <h3>Painel seguro — sem token embutido</h3>
             <p>Cole seu token pessoal do Pipefy no campo acima e clique em "Atualizar agora" para começar.</p>
@@ -1179,8 +1714,32 @@
   </div>
 </div>
 
+<!-- Actions Popover (kebab menu — secondary actions) -->
+<div id="popoverAcoes" class="actions-popover" role="menu" aria-hidden="true">
+  <a class="actions-popover-item" id="apItemOpen" href="#" target="_blank" rel="noopener">
+    <span class="actions-popover-icon">↗</span>
+    <span>Abrir card no Pipefy</span>
+  </a>
+  <button class="actions-popover-item" id="apItemEmail">
+    <span class="actions-popover-icon">📧</span>
+    <span>Gerar e-mail</span>
+    <span class="actions-popover-meta" id="apEmailCount"></span>
+  </button>
+  <button class="actions-popover-item" id="apItemCobranca">
+    <span class="actions-popover-icon">🔔</span>
+    <span>Registrar cobrança</span>
+    <span class="actions-popover-meta" id="apCobrancaMeta">Enviado</span>
+  </button>
+  <div class="actions-popover-divider"></div>
+  <button class="actions-popover-item" id="apItemAttach">
+    <span class="actions-popover-icon">📎</span>
+    <span>Ver anexos</span>
+    <span class="actions-popover-meta" id="apAttachCount"></span>
+  </button>
+</div>
+
 <!-- Move Popover (dropdown compacto ativado pelo botão Mover) -->
-<div id="movePopover" class="move-popover" role="menu" aria-hidden="true">
+<div id="popoverMover" class="move-popover" role="menu" aria-hidden="true">
   <div class="move-popover-header">
     <span>Mover card para…</span>
     <button class="move-popover-close" id="movePopoverClose" aria-label="Fechar">×</button>
@@ -1281,6 +1840,93 @@
   </div>
 </div>
 
+<!-- Cobrança Manual Modal -->
+<div class="modal-backdrop" id="modalCobranca">
+  <div class="modal" style="max-width: 580px">
+    <div class="modal-header">
+      <h3>🔔 Registrar Cobrança Manual</h3>
+      <button class="modal-close" id="cobrancaModalClose">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="info-box">
+        <div><strong>Cliente:</strong> <span id="cobrancaClient">—</span></div>
+        <div style="margin-top:4px"><strong>Cards que receberão o comentário:</strong> <span id="cobrancaCardCount">—</span></div>
+      </div>
+      <div class="form-group" style="margin-top:14px">
+        <label>Texto que será postado em cada card</label>
+        <textarea id="cobrancaPreview" rows="5" readonly></textarea>
+      </div>
+      <div class="warn-box" style="margin-top: 12px">
+        ⏰ Vencimento será atualizado para <strong id="cobrancaNewDueDate">—</strong> (3 dias úteis a partir de hoje)
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="cobrancaCancelBtn">Cancelar</button>
+      <button class="btn btn-primary-strong" id="cobrancaConfirmBtn">
+        <span>🔔</span><span>Confirmar e postar cobrança</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Encerramento Modal -->
+<div class="modal-backdrop" id="modalEncerramento">
+  <div class="modal" style="max-width: 640px">
+    <div class="modal-header">
+      <h3>🏁 Concluir caso de Violação</h3>
+      <button class="modal-close" id="closeModalClose">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="info-box">
+        <div><strong>Cliente:</strong> <span id="closeClient">—</span></div>
+        <div style="margin-top:4px"><strong>Agressor desta linha:</strong> <span id="closeAggressor">—</span></div>
+        <div style="margin-top:4px"><strong>Total de violações vinculadas:</strong> <span id="closeViolationCount">—</span></div>
+      </div>
+
+      <div class="form-group" style="margin-top:16px">
+        <label>1. Escopo do encerramento</label>
+        <label class="radio-row">
+          <input type="radio" name="closeScope" value="all" checked>
+          <span><strong>Encerrar caso inteiro</strong> — move o Atendimento para Concluídos Geral e posta em <em>todas</em> as violações vinculadas</span>
+        </label>
+        <label class="radio-row">
+          <input type="radio" name="closeScope" value="single">
+          <span><strong>Encerrar apenas esta violação</strong> — não move o Atendimento; posta apenas nesta violação + no Atendimento</span>
+        </label>
+      </div>
+
+      <div class="form-group">
+        <label>2. Motivo</label>
+        <label class="radio-row">
+          <input type="radio" name="closeReason" value="retirar" checked>
+          <span><span class="reason-badge reason-retirar">🟢 Retirar denúncia</span> — Cliente solicitou retirada</span>
+        </label>
+        <label class="radio-row">
+          <input type="radio" name="closeReason" value="manter">
+          <span><span class="reason-badge reason-manter">🔵 Manter denúncia</span> — Cliente solicitou manutenção</span>
+        </label>
+        <label class="radio-row">
+          <input type="radio" name="closeReason" value="semretorno">
+          <span><span class="reason-badge reason-semretorno">⚪ Sem retorno</span> — Sem retorno do cliente em 3 dias</span>
+        </label>
+      </div>
+
+      <div class="form-group">
+        <label>Preview do comentário</label>
+        <textarea id="closePreview" rows="6" readonly></textarea>
+      </div>
+
+      <div class="info-box" id="closeSummary" style="margin-top:8px"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="closeCancelBtn">Cancelar</button>
+      <button class="btn btn-primary-strong" id="closeConfirmBtn">
+        <span>🏁</span><span>Confirmar e encerrar</span>
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- Audit Log Modal -->
 <div class="modal-backdrop" id="auditModal">
   <div class="modal" style="max-width: 1000px; max-height: 90vh">
@@ -1295,6 +1941,8 @@
         <button class="filter-chip active" data-audit-action="all">Todas</button>
         <button class="filter-chip" data-audit-action="move">Movimentação</button>
         <button class="filter-chip" data-audit-action="email-copy">E-mail</button>
+        <button class="filter-chip" data-audit-action="cobranca">Cobrança</button>
+        <button class="filter-chip" data-audit-action="encerramento">Encerramento</button>
       </div>
       <div class="filter-spacer"></div>
       <button class="btn btn-ghost" id="auditExportBtn">⬇ CSV</button>
@@ -1864,6 +2512,56 @@ function detectPlatformsForLinkedCard(linkedCard) {
   return detectPlatformsFromUrls(collectUrlsFromLinkedCard(linkedCard));
 }
 
+/* ============================================================================
+   HELPERS — datas, dias úteis, link de card
+   ============================================================================ */
+function addBusinessDays(days, fromDate) {
+  // Pula sábado (6) e domingo (0). Conta 'days' dias úteis a partir de fromDate.
+  const d = new Date(fromDate || new Date());
+  let added = 0;
+  while (added < days) {
+    d.setDate(d.getDate() + 1);
+    const dow = d.getDay();
+    if (dow !== 0 && dow !== 6) added++;
+  }
+  return d;
+}
+
+function dateToBrasiliaIso(d, hour = 23, minute = 59) {
+  // Retorna ISO 8601 com offset -03:00 para uso na mutation updateCard
+  // Ex: 2026-04-30T23:59:00-03:00
+  const dt = new Date(d);
+  // Reconstrói a data no fuso de Brasília (sem horário de verão = -03:00 fixo desde 2019)
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Sao_Paulo',
+    year: 'numeric', month: '2-digit', day: '2-digit'
+  }).formatToParts(dt);
+  const get = t => parts.find(p => p.type === t)?.value || '';
+  const y = get('year'), m = get('month'), day = get('day');
+  const hh = String(hour).padStart(2, '0');
+  const mm = String(minute).padStart(2, '0');
+  return `${y}-${m}-${day}T${hh}:${mm}:00-03:00`;
+}
+
+function formatDateBr(d) {
+  const dt = new Date(d);
+  return new Intl.DateTimeFormat('pt-BR', {
+    timeZone: 'America/Sao_Paulo',
+    day: '2-digit', month: '2-digit', year: 'numeric'
+  }).format(dt);
+}
+
+function cardLinkUrl(cardId) {
+  return `https://app.pipefy.com/open-cards/${cardId}`;
+}
+
+function appendCardLink(commentText, attendanceCardId) {
+  // Anexa o link do card de Atendimento ao final de todo comentário.
+  // Pipefy converte URLs em hyperlinks automaticamente.
+  if (!attendanceCardId) return commentText;
+  return commentText.replace(/\s+$/, '') + `\n\n🔗 ${cardLinkUrl(attendanceCardId)}`;
+}
+
 function brasiliaTimestamp() {
   // Gera data/hora no fuso de Brasília (America/Sao_Paulo, GMT-3) — independente do fuso do navegador
   const d = new Date();
@@ -2119,6 +2817,18 @@ const CREATE_COMMENT_MUTATION = `
   }
 `;
 
+const UPDATE_CARD_DUE_DATE_MUTATION = `
+  mutation UpdateCardDueDate($cardId: ID!, $dueDate: DateTime) {
+    updateCard(input: { id: $cardId, due_date: $dueDate }) {
+      card { id due_date }
+    }
+  }
+`;
+
+async function setCardDueDate(cardId, dueDateIso) {
+  return gql(UPDATE_CARD_DUE_DATE_MUTATION, { cardId: String(cardId), dueDate: dueDateIso });
+}
+
 const CARD_QUERY = `
   query SingleCard($id: ID!) {
     card(id: $id) {
@@ -2162,17 +2872,33 @@ async function fetchAllAttendanceCards(onProgress) {
 
 async function moveCardToPhase(cardId, target, opts) {
   // target = entrada de CONFIG.MOVE_TARGETS
-  // opts = { card, emailSubject } — usado quando target.comment === true para comentários ricos
+  // opts = { card, emailSubject, fromPhaseSlug }
+  const fromPhaseSlug = opts?.fromPhaseSlug || '';
   const moveRes = await gql(MOVE_CARD_MUTATION, { cardId: String(cardId), phaseId: String(target.id) });
   const newPhase = moveRes?.moveCardToPhase?.card?.current_phase;
+
+  // Regra de vencimento: ao sair da fase Backlog (para qualquer destino),
+  // setar due_date = hoje + 3 dias úteis (23:59 Brasília)
+  let dueDateUpdated = null;
+  if (fromPhaseSlug === 'backlog') {
+    const due = addBusinessDays(3);
+    const dueIso = dateToBrasiliaIso(due);
+    try {
+      await setCardDueDate(cardId, dueIso);
+      dueDateUpdated = { iso: dueIso, br: formatDateBr(due) };
+    } catch (err) {
+      console.warn('[move] falha ao atualizar due_date (segue sem bloquear):', err.message);
+    }
+  }
 
   // Comentários automáticos SOMENTE se a fase destino for "Enviado para Cliente/Solicitante"
   if (target.comment) {
     const ts = brasiliaTimestamp();
     const userLabel = state.user.name || state.user.email || 'Usuário anônimo';
 
-    // 1) Comentário no card de Atendimento — formato curto (mantido)
-    const attendanceComment = `E-mail enviado em: ${ts.date} às ${ts.time} por ${userLabel}`;
+    // 1) Comentário no card de Atendimento — formato curto + link no final
+    let attendanceComment = `E-mail enviado em: ${ts.date} às ${ts.time} por ${userLabel}`;
+    attendanceComment = appendCardLink(attendanceComment, cardId);
     try {
       await gql(CREATE_COMMENT_MUTATION, { cardId: String(cardId), text: attendanceComment });
     } catch (err) {
@@ -2203,11 +2929,11 @@ async function moveCardToPhase(cardId, target, opts) {
             commentLines.push('Aguardando retorno em até 3 dias úteis para manutenção ou retirada da denúncia.');
             commentLines.push('');
             commentLines.push(`Plataforma: ${platformLabel}`);
-            const text = commentLines.join('\n');
+            // Link do Card de Atendimento sempre no fim
+            const text = appendCardLink(commentLines.join('\n'), cardId);
             return gql(CREATE_COMMENT_MUTATION, { cardId: String(linked.id), text });
           })
       );
-      // Loga falhas individuais, mas não interrompe o fluxo (move já foi feito)
       const failed = violationCommentResults.filter(r => r.status === 'rejected');
       if (failed.length) {
         console.warn(`[move] ${failed.length} comentário(s) em cards de Violação falharam:`, failed);
@@ -2215,7 +2941,7 @@ async function moveCardToPhase(cardId, target, opts) {
     }
   }
 
-  return newPhase;
+  return { newPhase, dueDateUpdated };
 }
 
 async function fetchLinkedCard(id) {
@@ -2318,6 +3044,15 @@ async function enrichCard(attendanceCard) {
     url: a.url, name: filenameFromUrl(a.url), source: 'aba Anexos'
   }));
   const attachments = combineAttachments(fieldAttachments, tabAttachments);
+
+  // Tipo de caso (do campo Solicitação): Violação de Marca | Violação Comercial
+  const reqField = findField(attendanceCard.fields, CONFIG.REQUEST_FIELD_NAMES, CONFIG.REQUEST_FIELD_INTERNAL_ID);
+  const requestRaw = fieldValue(reqField);
+  const requestNorm = normStr(requestRaw);
+  let caseType = '';      // 'marca' | 'comercial' | ''
+  let caseTypeLabel = ''; // 'Violação de Marca' | 'Violação Comercial' | ''
+  if (requestNorm.includes('marca')) { caseType = 'marca'; caseTypeLabel = 'Violação de Marca'; }
+  else if (requestNorm.includes('comercial')) { caseType = 'comercial'; caseTypeLabel = 'Violação Comercial'; }
   const clientField = findField(attendanceCard.fields, CONFIG.CLIENT_FIELD_NAMES, CONFIG.CLIENT_NAME_INTERNAL_ID);
   const campanhaField = findField(attendanceCard.fields, CONFIG.CAMPANHA_FIELD_NAMES, CONFIG.CAMPANHA_INTERNAL_ID);
   const obsField = findField(attendanceCard.fields, CONFIG.OBSERVATIONS_FIELD_NAMES, CONFIG.OBSERVATIONS_INTERNAL_ID);
@@ -2341,6 +3076,8 @@ async function enrichCard(attendanceCard) {
     observations: fieldValue(obsField),
     atdClientName,
     atdClientSource,
+    caseType,        // 'marca' | 'comercial' | ''
+    caseTypeLabel,   // 'Violação de Marca' | 'Violação Comercial' | ''
     linkedIds,
     linkedCards,
   };
@@ -2440,19 +3177,30 @@ function renderMetrics() {
   const total = state.cards.length;
   const withNF = state.cards.filter(c => c.hasNF).length;
   const withoutNF = total - withNF;
+  const pctWith = total ? (withNF / total) * 100 : 0;
+  const pctWithout = total ? (withoutNF / total) * 100 : 0;
   const byPhase = { backlog: 0, standby: 0, doing: 0, enviado: 0 };
   state.cards.forEach(c => { if (byPhase[c.phaseSlug] != null) byPhase[c.phaseSlug]++; });
 
   $('m-total').textContent = total;
   $('m-total-hint').textContent = total ? `${state.rows.length} linha(s) na tabela` : 'Aguardando dados';
   $('m-nf').textContent = withNF;
-  $('m-nf-hint').textContent = total ? `${((withNF/total)*100).toFixed(1)}% do total` : '0% do total';
+  $('m-nf-hint').textContent = total ? `${pctWith.toFixed(1)}% do total` : '0% do total';
+  if ($('m-nf-bar')) $('m-nf-bar').style.width = pctWith + '%';
   $('m-no-nf').textContent = withoutNF;
-  $('m-no-nf-hint').textContent = total ? `${((withoutNF/total)*100).toFixed(1)}% do total` : '0% do total';
+  $('m-no-nf-hint').textContent = total ? `${pctWithout.toFixed(1)}% do total` : '0% do total';
+  if ($('m-no-nf-bar')) $('m-no-nf-bar').style.width = pctWithout + '%';
   $('m-backlog').textContent = byPhase.backlog;
   $('m-standby').textContent = byPhase.standby;
   $('m-doing').textContent = byPhase.doing;
   $('m-enviado').textContent = byPhase.enviado;
+  // Barra horizontal proporcional
+  const phaseSum = byPhase.backlog + byPhase.standby + byPhase.doing + byPhase.enviado;
+  const pct = (n) => phaseSum ? (n / phaseSum) * 100 : 0;
+  if ($('m-bar-backlog')) $('m-bar-backlog').style.width = pct(byPhase.backlog) + '%';
+  if ($('m-bar-standby')) $('m-bar-standby').style.width = pct(byPhase.standby) + '%';
+  if ($('m-bar-doing'))   $('m-bar-doing').style.width   = pct(byPhase.doing) + '%';
+  if ($('m-bar-enviado')) $('m-bar-enviado').style.width = pct(byPhase.enviado) + '%';
 }
 
 function getFilteredRows() {
@@ -2479,7 +3227,7 @@ function renderTable() {
   $('footerRows').textContent = state.rows.length;
 
   if (!rows.length) {
-    tbody.innerHTML = `<tr><td colspan="11" class="empty-state">
+    tbody.innerHTML = `<tr><td colspan="9" class="empty-state">
       <div class="icon">📭</div>
       <h3>${state.cards.length ? 'Nenhuma linha corresponde aos filtros' : 'Nenhum caso carregado'}</h3>
       <p>${state.cards.length ? 'Ajuste os filtros ou a busca para ver resultados.' : 'Clique em "Carregar / Atualizar" para buscar os dados.'}</p>
@@ -2490,10 +3238,7 @@ function renderTable() {
   const html = rows.map((r, i) => rowHtml(r, i)).join('');
   tbody.innerHTML = html;
 
-  // attach row actions
-  tbody.querySelectorAll('button[data-action="email"]').forEach(btn => {
-    btn.addEventListener('click', () => openEmailModal(parseInt(btn.dataset.rowIdx)));
-  });
+  // attach row actions — agora só Mover + kebab (demais ações no popover do kebab)
   tbody.querySelectorAll('button[data-action="attach"]').forEach(btn => {
     btn.addEventListener('click', () => openAttachModal(parseInt(btn.dataset.rowIdx)));
   });
@@ -2501,6 +3246,12 @@ function renderTable() {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       movePopover.open(btn, parseInt(btn.dataset.rowIdx));
+    });
+  });
+  tbody.querySelectorAll('button[data-action="kebab"]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      actionsPopover.open(btn, parseInt(btn.dataset.rowIdx));
     });
   });
 
@@ -2545,7 +3296,13 @@ function rowHtml(r, idx) {
       historyIcon = `<span class="row-history-icon tooltip" data-tooltip="${tip}">i</span>`;
     }
   }
-  const clientCellContent = `<div>${clientName}${historyIcon}</div>${clientSubtag}`;
+  // Chip de tipo de caso (Violação de Marca | Comercial) — só na primeira linha do grupo
+  let caseTypeChip = '';
+  if (showClient && r.card.caseType) {
+    const labelShort = r.card.caseType === 'marca' ? 'MARCA' : 'COMERCIAL';
+    caseTypeChip = `<span class="case-type-chip case-type-${r.card.caseType} tooltip" data-tooltip="${escapeHtml(r.card.caseTypeLabel)}">${labelShort}</span>`;
+  }
+  const clientCellContent = `<div class="client-row">${caseTypeChip}${clientName}${historyIcon}</div>${clientSubtag}`;
 
   const typeBadge = r.violationType
     ? `<span class="type-violation-badge" title="Tipo de Violação">${escapeHtml(r.violationType)}</span>`
@@ -2560,19 +3317,19 @@ function rowHtml(r, idx) {
     : (r.missingLink ? '<span class="cell-empty">—</span>' : '<span class="cell-warn">⚠</span>');
   const aggressorCell = `<div>${aggressorText}</div>${typeBadge || platformBadge ? `<div style="margin-top:5px;display:flex;gap:5px;flex-wrap:wrap">${typeBadge}${platformBadge}</div>` : ''}`;
 
-  const productIdCell = r.productId ? `<span style="font-family:ui-monospace,Consolas,monospace;font-size:11.5px">${escapeHtml(r.productId)}</span>` : '<span class="cell-empty">—</span>';
+  const productIdCell = r.productId ? `<span class="mono" style="font-size:11.5px;color:var(--accent-2)">${escapeHtml(r.productId)}</span>` : '<span class="cell-empty">—</span>';
   const productTitleCell = r.productTitle ? escapeHtml(truncate(r.productTitle, 80)) : '<span class="cell-empty">—</span>';
 
-  // Link do Produto: prioriza campo específico → evidência → URL do card vinculado
-  const productLinkUrl = r.productLink || r.evidenceLink || r.linkedCardUrl || '';
-  const productLinkCell = productLinkUrl
-    ? `<a href="${escapeHtml(productLinkUrl)}" target="_blank" rel="noopener" class="cell-link tooltip" data-tooltip="${escapeHtml(productLinkUrl)}">🔗 ${r.productLink ? 'abrir anúncio' : (r.evidenceLink ? 'via evidência' : 'via card')}</a>`
-    : '<span class="cell-empty">—</span>';
-  // Link da Evidência: evidência → link do produto
-  const evidenceLinkUrl = r.evidenceLink || r.productLink || '';
-  const evidenceLinkCell = evidenceLinkUrl
-    ? `<a href="${escapeHtml(evidenceLinkUrl)}" target="_blank" rel="noopener" class="cell-link tooltip" data-tooltip="${escapeHtml(evidenceLinkUrl)}">🔗 evidência</a>`
-    : '<span class="cell-empty">—</span>';
+  // Links unificados: 2 ícones lado a lado (Produto + Evidência)
+  const productLinkUrl = r.productLink || r.linkedCardUrl || '';
+  const evidenceLinkUrl = r.evidenceLink || '';
+  const linkProdHtml = productLinkUrl
+    ? `<a href="${escapeHtml(productLinkUrl)}" target="_blank" rel="noopener" class="link-icon tooltip" data-tooltip="Link do produto: ${escapeHtml(productLinkUrl)}">🔗</a>`
+    : `<span class="link-icon disabled tooltip" data-tooltip="Sem link do produto">🔗</span>`;
+  const linkEvidHtml = evidenceLinkUrl
+    ? `<a href="${escapeHtml(evidenceLinkUrl)}" target="_blank" rel="noopener" class="link-icon tooltip" data-tooltip="Evidência: ${escapeHtml(evidenceLinkUrl)}">📷</a>`
+    : `<span class="link-icon disabled tooltip" data-tooltip="Sem evidência">📷</span>`;
+  const linksCell = `<div class="links-group">${linkProdHtml}${linkEvidHtml}</div>`;
 
   const nfBadge = r.card.hasNF
     ? `<span class="badge with-nf"><span class="badge-dot"></span>Com NF</span>`
@@ -2582,26 +3339,25 @@ function rowHtml(r, idx) {
     ? `<span class="warning-icon tooltip" data-tooltip="Link do card de Violação não encontrado ou inválido">⚠️</span>`
     : '';
 
-  return `<tr class="${groupCls}">
+  const createdAtTooltip = `Criado em ${formatShortDate(r.card.createdAt)}`;
+  return `<tr class="${groupCls}" title="${escapeHtml(createdAtTooltip)}">
     <td>${clientCellContent} ${warningBadge}</td>
     <td>${aggressorCell}</td>
     <td>${productIdCell}</td>
     <td class="product-title">${productTitleCell}</td>
-    <td>${productLinkCell}</td>
-    <td>${evidenceLinkCell}</td>
+    <td>${linksCell}</td>
     <td><span class="phase-badge ${phaseCls}">${escapeHtml(phaseText)}</span></td>
     <td>${nfBadge}</td>
     <td>
-      <button class="action-btn tooltip" data-action="attach" data-row-idx="${idx}" data-tooltip="Ver anexos (${attCount})" ${attCount ? `data-count="${attCount}"` : ''}>📎</button>
+      <button class="action-btn tooltip" data-action="attach" data-row-idx="${idx}" data-tooltip="${attCount} anexo(s)" ${attCount ? `data-count="${attCount}"` : ''}>📎</button>
     </td>
-    <td><span style="color:var(--text-2);font-size:11.5px">${formatShortDate(r.card.createdAt)}</span></td>
     <td>
       <div class="actions">
-        <a class="action-btn tooltip" href="${escapeHtml(r.pipefyCardUrl)}" target="_blank" rel="noopener" data-tooltip="Abrir card no Pipefy">🔗</a>
-        <button class="action-btn tooltip" data-action="email" data-row-idx="${idx}" data-tooltip="Gerar e-mail (${r.groupSize} produto${r.groupSize>1?'s':''})" ${r.groupSize > 1 ? `data-count="${r.groupSize}"` : ''}>📧</button>
-        <button class="btn-move tooltip" data-action="move" data-row-idx="${idx}" data-tooltip="Mover card para outra fase">
-          <span>Mover</span>
-          <span class="caret">▾</span>
+        <button class="btn-move" data-action="move" data-row-idx="${idx}">
+          Mover<span class="caret">▾</span>
+        </button>
+        <button class="kebab-btn tooltip" data-action="kebab" data-row-idx="${idx}" data-tooltip="Mais ações" aria-label="Mais ações">
+          <span class="kebab-dots">⋯</span>
         </button>
       </div>
     </td>
@@ -2613,7 +3369,7 @@ function showSkeleton(n = 8) {
   const rows = [];
   for (let i = 0; i < n; i++) {
     rows.push(`<tr class="skeleton-row">${
-      Array.from({length: 11}).map(() => `<td><div class="skeleton-bar" style="width:${60 + Math.random()*30}%"></div></td>`).join('')
+      Array.from({length: 9}).map(() => `<td><div class="skeleton-bar" style="width:${60 + Math.random()*30}%"></div></td>`).join('')
     }</tr>`);
   }
   tbody.innerHTML = rows.join('');
@@ -2634,18 +3390,17 @@ function renderUserChip() {
   const u = state.user;
   const avatar = $('userAvatar');
   const nameEl = $('userName');
-  const emailEl = $('userEmail');
+  const chipBtn = $('userChip');
   if (!u || !u.email) {
-    avatar.textContent = '?';
-    avatar.classList.add('anon');
-    nameEl.textContent = 'Identificar';
-    emailEl.textContent = 'token não decodificado';
+    if (avatar) { avatar.textContent = '?'; avatar.classList.add('anon'); }
+    if (nameEl) nameEl.textContent = 'Identificar';
+    if (chipBtn) chipBtn.dataset.tooltip = 'Token não decodificado — clique para configurar';
     return;
   }
-  avatar.classList.remove('anon');
-  avatar.textContent = getAvatarInitials(u.name, u.email);
-  nameEl.textContent = u.name;
-  emailEl.textContent = u.email;
+  if (avatar) { avatar.classList.remove('anon'); avatar.textContent = getAvatarInitials(u.name, u.email); }
+  if (nameEl) nameEl.textContent = u.name;
+  // E-mail vai para o tooltip do chip (não é mais exibido inline)
+  if (chipBtn) chipBtn.dataset.tooltip = `${u.name}\n${u.email}\n(clique para ajustar nome de exibição)`;
 }
 
 function updateAuditBadge() {
@@ -2684,7 +3439,10 @@ function renderAuditTable() {
     return;
   }
   tbody.innerHTML = entries.map(e => {
-    const actionCls = e.action === 'move' ? 'audit-action-move' : 'audit-action-email';
+    const actionCls = e.action === 'move' ? 'audit-action-move'
+                    : e.action === 'cobranca' ? 'audit-action-cobranca'
+                    : e.action === 'encerramento' ? 'audit-action-encerramento'
+                    : 'audit-action-email';
     const statusHtml = e.success
       ? `<span class="audit-status-ok">✓ ok</span>`
       : `<span class="audit-status-err tooltip" data-tooltip="${escapeHtml(e.error || 'erro')}">✗ falha</span>`;
@@ -2885,6 +3643,342 @@ function generateEmail(row) {
 }
 
 /* ============================================================================
+   ACTIONS POPOVER — menu kebab "⋯" com ações secundárias
+   ============================================================================ */
+const actionsPopover = {
+  el: null,
+  currentBtn: null,
+  init() {
+    this.el = $('popoverAcoes');
+    document.addEventListener('click', (e) => {
+      if (!this.el.classList.contains('visible')) return;
+      if (this.el.contains(e.target)) return;
+      if (e.target.closest('[data-action="kebab"]')) return;
+      this.close();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.el.classList.contains('visible')) this.close();
+    });
+    window.addEventListener('scroll', () => this.close(), true);
+    window.addEventListener('resize', () => this.close());
+  },
+  open(btn, rowIdx) {
+    const rows = state._filteredRows || [];
+    const row = rows[rowIdx];
+    if (!row) return;
+    const card = row.card;
+
+    // Configura cada item:
+    // 1) Abrir card no Pipefy
+    $('apItemOpen').href = card.pipefyUrl || '#';
+    $('apItemOpen').onclick = () => this.close();
+
+    // 2) Gerar e-mail
+    $('apEmailCount').textContent = `${row.groupSize} produto${row.groupSize > 1 ? 's' : ''}`;
+    $('apItemEmail').onclick = () => { this.close(); openEmailModal(rowIdx); };
+
+    // 3) Cobrança — só habilita se phase = enviado
+    const isEnviado = card.phaseSlug === 'enviado';
+    $('apItemCobranca').classList.toggle('disabled', !isEnviado);
+    $('apItemCobranca').disabled = !isEnviado;
+    $('apCobrancaMeta').textContent = isEnviado ? 'Disponível' : 'Só na fase Enviado';
+    $('apItemCobranca').onclick = () => {
+      if (!isEnviado) return;
+      this.close();
+      cobrancaModal.open(rowIdx);
+    };
+
+    // 4) Anexos
+    const attCount = card.attachments?.length || 0;
+    $('apAttachCount').textContent = `${attCount} arquivo${attCount !== 1 ? 's' : ''}`;
+    $('apItemAttach').classList.toggle('disabled', attCount === 0);
+    $('apItemAttach').disabled = attCount === 0;
+    $('apItemAttach').onclick = () => {
+      if (attCount === 0) return;
+      this.close();
+      openAttachModal(rowIdx);
+    };
+
+    // Posiciona ao lado do botão
+    this.position(btn);
+    this.el.classList.add('visible');
+    this.currentBtn = btn;
+    btn.classList.add('active');
+  },
+  position(btn) {
+    const rect = btn.getBoundingClientRect();
+    const popW = 240;
+    const popH = 220;
+    let left = rect.right - popW;
+    let top = rect.bottom + 6;
+    if (left < 10) left = 10;
+    if (left + popW > window.innerWidth - 10) left = window.innerWidth - popW - 10;
+    if (top + popH > window.innerHeight - 10) top = rect.top - popH - 6;
+    this.el.style.left = left + 'px';
+    this.el.style.top = top + 'px';
+  },
+  close() {
+    this.el.classList.remove('visible');
+    if (this.currentBtn) this.currentBtn.classList.remove('active');
+    this.currentBtn = null;
+  },
+};
+
+/* ============================================================================
+   COBRANÇA MANUAL — botão na linha (somente fase Enviado)
+   ============================================================================ */
+function buildCobrancaSubject(card) {
+  // Mesmo formato do assunto do e-mail: "Retorno denúncia [Plataforma] DD/MM/AAAA - [Cliente] | Branddi"
+  const cliente = card.atdClientName || '[Cliente]';
+  const platforms = detectPlatformsForCard(card);
+  const platformLabel = formatPlatformList(platforms) || 'Marketplace';
+  return `Retorno denúncia ${platformLabel} ${todayFull()} - ${cliente} | Branddi`;
+}
+
+function buildCobrancaCommentText(card) {
+  const ts = brasiliaTimestamp();
+  const userLabel = state.user.name || state.user.email || 'Usuário anônimo';
+  const subject = buildCobrancaSubject(card);
+  const lines = [
+    `Em ${ts.date}, realizamos cobrança de retorno ao cliente e seguimos aguardando o direcionamento. (Registrado por ${userLabel})`,
+    '',
+    `Assunto: ${subject}`,
+  ];
+  return appendCardLink(lines.join('\n'), card.id);
+}
+
+const cobrancaModal = {
+  current: null,
+  open(rowIdx) {
+    const rows = state._filteredRows || [];
+    const row = rows[rowIdx];
+    if (!row) return;
+    this.current = row;
+    const card = row.card;
+    const linkedCount = (card.linkedCards || []).filter(l => l && !l._notFound).length;
+    $('cobrancaClient').textContent = card.atdClientName || row.client || '—';
+    $('cobrancaCardCount').textContent = `1 Atendimento + ${linkedCount} Violação = ${1 + linkedCount} comentário(s)`;
+    $('cobrancaPreview').value = buildCobrancaCommentText(card);
+    const newDue = addBusinessDays(3);
+    $('cobrancaNewDueDate').textContent = formatDateBr(newDue);
+    $('modalCobranca').classList.add('visible');
+  },
+  close() { $('modalCobranca').classList.remove('visible'); this.current = null; },
+  async confirm() {
+    if (!this.current) return;
+    const row = this.current;
+    const card = row.card;
+    const btn = $('cobrancaConfirmBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="btn-icon spinning">⟳</span><span>Postando…</span>';
+
+    const text = buildCobrancaCommentText(card);
+    const linkedCards = (card.linkedCards || []).filter(l => l && !l._notFound && l.id);
+    let postedCount = 0;
+    let failedCount = 0;
+
+    try {
+      // 1) Comentário no Atendimento
+      try {
+        await gql(CREATE_COMMENT_MUTATION, { cardId: String(card.id), text });
+        postedCount++;
+      } catch (e) { failedCount++; console.warn('[cobranca] falha no Atendimento:', e.message); }
+
+      // 2) Comentários nos cards de Violação (todos, em paralelo)
+      const results = await Promise.allSettled(
+        linkedCards.map(linked => gql(CREATE_COMMENT_MUTATION, { cardId: String(linked.id), text }))
+      );
+      results.forEach(r => r.status === 'fulfilled' ? postedCount++ : failedCount++);
+
+      // 3) Atualiza vencimento do Atendimento para hoje + 3 dias úteis
+      const newDue = addBusinessDays(3);
+      const dueIso = dateToBrasiliaIso(newDue);
+      let dueOk = false;
+      try { await setCardDueDate(card.id, dueIso); dueOk = true; }
+      catch (e) { console.warn('[cobranca] falha ao atualizar due_date:', e.message); }
+
+      // 4) Audit log
+      recordAudit({
+        action: 'cobranca',
+        actionLabel: `Cobrança manual (+ ${postedCount} coment.${dueOk ? ' + venc.' : ''})`,
+        cardId: card.id,
+        cardTitle: card.title || '',
+        fromPhase: card.phase,
+        toPhase: '',
+        details: `Postado em ${postedCount} cards${failedCount ? ` · ${failedCount} falhas` : ''}${dueOk ? ` · Novo vencimento: ${formatDateBr(newDue)}` : ''}`,
+        success: failedCount === 0,
+        error: failedCount ? `${failedCount} comentário(s) falharam` : '',
+      });
+
+      this.close();
+      const summary = failedCount === 0
+        ? `✓ Cobrança registrada em ${postedCount} card(s)`
+        : `⚠ ${postedCount} ok, ${failedCount} falha(s)`;
+      showCopyFeedback(summary);
+    } catch (err) {
+      console.error('[cobranca] erro inesperado:', err);
+      showCopyFeedback('⚠ Erro: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<span>🔔</span><span>Confirmar e postar cobrança</span>';
+    }
+  },
+};
+
+/* ============================================================================
+   ENCERRAMENTO — modal com escopo (todos / apenas este) + motivo (3 opções)
+   ============================================================================ */
+const CLOSE_REASON_TEMPLATES = {
+  retirar:    'Cliente retornou solicitando a retirada da denúncia. Task aberta e orientação já repassada para que a devida ação seja tomada. Portanto, concluindo a tarefa pelo lado de atendimento.',
+  manter:     'Cliente retornou solicitando que mantivéssemos a denúncia. Task aberta e orientação já repassada para que a devida ação seja tomada. Portanto, concluindo a tarefa pelo lado de atendimento.',
+  semretorno: 'Não obtivemos retorno do cliente dentro do prazo de três dias, conforme estabelecido pelo procedimento padrão do BPP. Portanto, concluindo a tarefa pelo lado de atendimento.',
+};
+const CLOSE_REASON_LABELS = {
+  retirar: 'Retirar denúncia',
+  manter: 'Manter denúncia',
+  semretorno: 'Sem retorno',
+};
+
+function buildCloseCommentText(card) {
+  const reasonEl = document.querySelector('input[name="closeReason"]:checked');
+  const reason = reasonEl ? reasonEl.value : 'retirar';
+  const baseText = CLOSE_REASON_TEMPLATES[reason] || CLOSE_REASON_TEMPLATES.retirar;
+  return appendCardLink(baseText, card.id);
+}
+
+const closeModal = {
+  current: null,
+  open(rowIdx) {
+    const rows = state._filteredRows || [];
+    const row = rows[rowIdx];
+    if (!row) return;
+    this.current = row;
+    const card = row.card;
+    const linkedCount = (card.linkedCards || []).filter(l => l && !l._notFound).length;
+    $('closeClient').textContent = card.atdClientName || row.client || '—';
+    $('closeAggressor').textContent = row.aggressor || '— (sem violação vinculada)';
+    $('closeViolationCount').textContent = `${linkedCount} card(s) de Violação`;
+    // Reset radios para defaults
+    document.querySelector('input[name="closeScope"][value="all"]').checked = true;
+    document.querySelector('input[name="closeReason"][value="retirar"]').checked = true;
+    this.refreshPreview();
+    $('modalEncerramento').classList.add('visible');
+  },
+  close() { $('modalEncerramento').classList.remove('visible'); this.current = null; },
+  refreshPreview() {
+    if (!this.current) return;
+    const row = this.current;
+    const card = row.card;
+    const scopeEl = document.querySelector('input[name="closeScope"]:checked');
+    const scope = scopeEl ? scopeEl.value : 'all';
+    const linkedCount = (card.linkedCards || []).filter(l => l && !l._notFound).length;
+    $('closePreview').value = buildCloseCommentText(card);
+
+    let summaryHtml;
+    if (scope === 'all') {
+      summaryHtml = `<strong>📋 Resumo:</strong> O Atendimento será movido para <strong>Concluídos Geral</strong>. ` +
+                    `O comentário será postado no Atendimento + ${linkedCount} card(s) de Violação. Total: <strong>${1 + linkedCount} card(s)</strong>.`;
+    } else {
+      const linkedHasId = row.linked && row.linked.id;
+      summaryHtml = `<strong>📋 Resumo:</strong> O Atendimento <strong>NÃO será movido</strong>. ` +
+                    `O comentário será postado no Atendimento` +
+                    (linkedHasId ? ` + 1 card de Violação (${row.aggressor || 'desta linha'})` : ` (sem violação vinculada nesta linha)`) +
+                    `. Total: <strong>${linkedHasId ? 2 : 1} card(s)</strong>.`;
+    }
+    $('closeSummary').innerHTML = summaryHtml;
+  },
+  async confirm() {
+    if (!this.current) return;
+    const row = this.current;
+    const card = row.card;
+    const btn = $('closeConfirmBtn');
+    const scopeEl = document.querySelector('input[name="closeScope"]:checked');
+    const reasonEl = document.querySelector('input[name="closeReason"]:checked');
+    const scope = scopeEl ? scopeEl.value : 'all';
+    const reason = reasonEl ? reasonEl.value : 'retirar';
+    const text = buildCloseCommentText(card);
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="btn-icon spinning">⟳</span><span>Encerrando…</span>';
+
+    let postedCount = 0;
+    let failedCount = 0;
+    let movedToConcluido = false;
+
+    try {
+      // 1) Comentário no Atendimento (sempre)
+      try {
+        await gql(CREATE_COMMENT_MUTATION, { cardId: String(card.id), text });
+        postedCount++;
+      } catch (e) { failedCount++; console.warn('[encerramento] falha no Atendimento:', e.message); }
+
+      // 2) Comentários nos cards de Violação — depende do escopo
+      let targetLinkedCards = [];
+      if (scope === 'all') {
+        targetLinkedCards = (card.linkedCards || []).filter(l => l && !l._notFound && l.id);
+      } else {
+        // Apenas a violação desta linha
+        if (row.linked && row.linked.id && !row.linked._notFound) {
+          targetLinkedCards = [row.linked];
+        }
+      }
+      const results = await Promise.allSettled(
+        targetLinkedCards.map(linked => gql(CREATE_COMMENT_MUTATION, { cardId: String(linked.id), text }))
+      );
+      results.forEach(r => r.status === 'fulfilled' ? postedCount++ : failedCount++);
+
+      // 3) Move o Atendimento para Concluídos Geral SOMENTE se escopo = all
+      if (scope === 'all') {
+        const concluidoTarget = CONFIG.MOVE_TARGETS.find(t => t.slug === 'concluido');
+        if (concluidoTarget) {
+          try {
+            await gql(MOVE_CARD_MUTATION, { cardId: String(card.id), phaseId: String(concluidoTarget.id) });
+            movedToConcluido = true;
+          } catch (e) {
+            console.warn('[encerramento] falha ao mover para Concluído:', e.message);
+            failedCount++;
+          }
+        }
+      }
+
+      // 4) Audit log
+      recordAudit({
+        action: 'encerramento',
+        actionLabel: `Encerrar ${scope === 'all' ? 'caso' : 'produto'} · ${CLOSE_REASON_LABELS[reason]} (+ ${postedCount} coment.${movedToConcluido ? ' + move' : ''})`,
+        cardId: card.id,
+        cardTitle: card.title || '',
+        fromPhase: card.phase,
+        toPhase: movedToConcluido ? 'Concluídos Geral' : card.phase,
+        details: `Escopo: ${scope === 'all' ? 'caso inteiro' : 'apenas esta violação'} · Motivo: ${CLOSE_REASON_LABELS[reason]}${failedCount ? ` · ${failedCount} falha(s)` : ''}`,
+        success: failedCount === 0,
+        error: failedCount ? `${failedCount} operação(ões) falharam` : '',
+      });
+
+      // 5) Atualiza estado local: se foi caso inteiro, remove o card do painel
+      if (movedToConcluido) {
+        state.cards = state.cards.filter(c => c.id !== card.id);
+        state.rows = state.rows.filter(r => r.card.id !== card.id);
+      }
+
+      this.close();
+      renderMetrics();
+      renderTable();
+
+      const summaryMsg = failedCount === 0
+        ? `✓ Encerramento ${scope === 'all' ? 'do caso' : 'do produto'} registrado em ${postedCount} card(s)`
+        : `⚠ ${postedCount} ok, ${failedCount} falha(s)`;
+      showCopyFeedback(summaryMsg);
+    } catch (err) {
+      console.error('[encerramento] erro inesperado:', err);
+      showCopyFeedback('⚠ Erro: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<span>🏁</span><span>Confirmar e encerrar</span>';
+    }
+  },
+};
+
+/* ============================================================================
    MOVE POPOVER — controla a abertura/fechamento e dispatch da movimentação
    ============================================================================ */
 const movePopover = {
@@ -2893,7 +3987,7 @@ const movePopover = {
   currentRow: null,
   currentBtn: null,
   init() {
-    this.el = $('movePopover');
+    this.el = $('popoverMover');
     $('movePopoverClose').addEventListener('click', () => this.close());
     this.el.querySelectorAll('.move-option').forEach(opt => {
       opt.addEventListener('click', (e) => {
@@ -2901,6 +3995,17 @@ const movePopover = {
         const phaseSlug = opt.dataset.phaseSlug;
         const phaseLabel = opt.dataset.phaseLabel;
         const withComment = opt.dataset.withComment === '1';
+        // "Concluído" abre o modal de Encerramento (com escopo + motivo) em vez de mover direto
+        if (phaseSlug === 'concluido') {
+          const row = this.currentRow;
+          const btn = this.currentBtn;
+          this.close();
+          if (btn) btn.classList.remove('active');
+          // Encontra o índice da linha em state._filteredRows
+          const idx = (state._filteredRows || []).indexOf(row);
+          if (idx >= 0) closeModal.open(idx);
+          return;
+        }
         this.dispatch({ id: phaseId, slug: phaseSlug, label: phaseLabel, comment: withComment });
       });
     });
@@ -2995,25 +4100,31 @@ const movePopover = {
     }
 
     try {
-      const newPhase = await moveCardToPhase(cardId, {
+      const moveResult = await moveCardToPhase(cardId, {
         id: target.id,
         comment: target.comment,
-      }, { card, emailSubject });
+      }, { card, emailSubject, fromPhaseSlug: card.phaseSlug });
+      const newPhase = moveResult.newPhase;
+      const dueInfo = moveResult.dueDateUpdated;
 
       // Registra no audit log
       const linkedCount = (card.linkedCards || []).filter(l => l && !l._notFound).length;
+      const auditDetails = [];
+      if (target.comment) {
+        auditDetails.push(`Comentário no Atendimento + ${linkedCount} coment(s) nos cards de Violação`);
+        if (emailSubject) auditDetails.push(`Assunto: ${emailSubject}`);
+      }
+      if (dueInfo) auditDetails.push(`Vencimento setado para ${dueInfo.br} (saindo de Backlog)`);
       recordAudit({
         action: 'move',
         actionLabel: target.comment
           ? `Mover → ${target.label} (+ ${1 + linkedCount} coment.)`
-          : `Mover → ${target.label}`,
+          : (dueInfo ? `Mover → ${target.label} (+ vencimento)` : `Mover → ${target.label}`),
         cardId: cardId,
         cardTitle: card.title || '',
         fromPhase: fromPhase,
         toPhase: newPhase?.name || target.label,
-        details: target.comment
-          ? `Comentário no Atendimento + ${linkedCount} coment(s) nos cards de Violação. Assunto: ${emailSubject}`
-          : '',
+        details: auditDetails.join(' · '),
         success: true,
       });
 
@@ -3202,7 +4313,7 @@ async function load() {
   } catch (err) {
     console.error(err);
     setStatus('error', 'Erro: ' + err.message);
-    $('tableBody').innerHTML = `<tr><td colspan="11" class="empty-state">
+    $('tableBody').innerHTML = `<tr><td colspan="9" class="empty-state">
       <div class="icon">⚠️</div>
       <h3>Falha ao carregar dados</h3>
       <p>${escapeHtml(err.message)}</p>
@@ -3252,6 +4363,12 @@ function startAutoRefresh() {
    ============================================================================ */
 
 function init() {
+  // Listeners CRÍTICOS no topo — protegidos contra erros nos próximos blocos
+  try {
+    $('userChip').addEventListener('click', openUserModal);
+    $('auditBtn').addEventListener('click', openAuditModal);
+  } catch (e) { console.warn('[init] falha ao anexar listeners de userChip/auditBtn:', e); }
+
   // Token vem SOMENTE do localStorage (cada operador cola o seu na primeira vez)
   let savedToken = '';
   try { savedToken = localStorage.getItem(CONFIG.TOKEN_STORAGE_KEY) || ''; } catch(e) {}
@@ -3262,6 +4379,19 @@ function init() {
   $('tokenInput').addEventListener('change', () => {
     const v = $('tokenInput').value.trim();
     try { if (v) localStorage.setItem(CONFIG.TOKEN_STORAGE_KEY, v); } catch(e) {}
+  });
+
+  // Botão ⚙ mostra/esconde o token input
+  $('settingsBtn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    $('tokenInput').classList.toggle('visible');
+    if ($('tokenInput').classList.contains('visible')) $('tokenInput').focus();
+  });
+  document.addEventListener('click', (e) => {
+    const inp = $('tokenInput');
+    if (!inp.classList.contains('visible')) return;
+    if (e.target === inp || e.target === $('settingsBtn')) return;
+    inp.classList.remove('visible');
   });
 
   // Filters
@@ -3316,11 +4446,30 @@ function init() {
   });
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') { closeEmailModal(); closeAttachModal(); closeAuditModal(); closeUserModal(); }
+    if (e.key === 'Escape') {
+      closeEmailModal(); closeAttachModal(); closeAuditModal(); closeUserModal();
+      cobrancaModal.close(); closeModal.close();
+    }
   });
 
-  // Inicializa o popover de Mover (listeners globais)
+  // --- Cobrança modal ---
+  $('cobrancaModalClose').addEventListener('click', () => cobrancaModal.close());
+  $('cobrancaCancelBtn').addEventListener('click', () => cobrancaModal.close());
+  $('cobrancaConfirmBtn').addEventListener('click', () => cobrancaModal.confirm());
+  $('modalCobranca').addEventListener('click', e => { if (e.target === $('modalCobranca')) cobrancaModal.close(); });
+
+  // --- Encerramento modal ---
+  $('closeModalClose').addEventListener('click', () => closeModal.close());
+  $('closeCancelBtn').addEventListener('click', () => closeModal.close());
+  $('closeConfirmBtn').addEventListener('click', () => closeModal.confirm());
+  $('modalEncerramento').addEventListener('click', e => { if (e.target === $('modalEncerramento')) closeModal.close(); });
+  document.querySelectorAll('input[name="closeScope"], input[name="closeReason"]').forEach(el => {
+    el.addEventListener('change', () => closeModal.refreshPreview());
+  });
+
+  // Inicializa popovers (listeners globais)
   movePopover.init();
+  actionsPopover.init();
 
   // --- Audit log init ---
   loadAuditLog();
@@ -3330,7 +4479,7 @@ function init() {
   identifyUserFromToken($('tokenInput').value);
   renderUserChip();
 
-  $('userChip').addEventListener('click', openUserModal);
+  // (listener de userChip já anexado no topo do init para proteção)
   $('userModalClose').addEventListener('click', closeUserModal);
   $('userSaveBtn').addEventListener('click', () => {
     setUserNameOverride($('userModalName').value);
@@ -3351,7 +4500,7 @@ function init() {
   });
 
   // --- Audit modal ---
-  $('auditBtn').addEventListener('click', openAuditModal);
+  // (listener de auditBtn já anexado no topo do init para proteção)
   $('auditModalClose').addEventListener('click', closeAuditModal);
   $('auditCloseBtn').addEventListener('click', closeAuditModal);
   $('auditModal').addEventListener('click', e => { if (e.target === $('auditModal')) closeAuditModal(); });
